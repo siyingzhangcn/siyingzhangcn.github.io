@@ -1,0 +1,211 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>File I/O and Debugging | SIYING ZHANG</title><meta name="description" content="File I&#x2F;O ifstream (input file stream) Reading files   ofstream (output file stream) Writing to files    Common Pattern Open file #include &amp;quto; fstream &amp;quto;  #include “filelib.h” (standford library"><meta name="keywords" content="C++"><meta name="author" content="Siying Zhag"><meta name="copyright" content="Siying Zhag"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/img/s.png"><link rel="canonical" href="http://example.com/2020/09/24/File/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="File I/O and Debugging"><meta property="og:url" content="http://example.com/2020/09/24/File/"><meta property="og:site_name" content="SIYING ZHANG"><meta property="og:description" content="File I&#x2F;O ifstream (input file stream) Reading files   ofstream (output file stream) Writing to files    Common Pattern Open file #include &amp;quto; fstream &amp;quto;  #include “filelib.h” (standford library"><meta property="og:image" content="http://example.com/img/index.jpg"><meta property="article:published_time" content="2020-09-24T09:05:50.000Z"><meta property="article:modified_time" content="2020-09-24T09:56:38.489Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.1.1',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime: '',
+  date_suffix: {"one_hour":"Just","hours":"hours ago","day":"days ago"},
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+    },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2020-09-24 11:56:38'
+}</script><noscript><style type="text/css">
+#nav {
+  opacity: 1
+}
+.justified-gallery img {
+  opacity: 1
+}
+</style></noscript><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+  }
+}
+
+var autoChangeMode = 'false'
+var t = saveToLocal.get('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (saveToLocal.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="APlayer.min.css"><div id="aplayer"></div><script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js" async></script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">4</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">1</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="web_bg" data-type="photo"></div><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#File-I-O"><span class="toc-number">1.</span> <span class="toc-text">File I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Common-Pattern"><span class="toc-number">1.1.</span> <span class="toc-text">Common Pattern</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Standford-Library"><span class="toc-number">1.2.</span> <span class="toc-text">Standford Library</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Creating-and-Closing"><span class="toc-number">1.3.</span> <span class="toc-text">Creating and Closing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Writing-Output"><span class="toc-number">1.4.</span> <span class="toc-text">Writing Output</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#istringstream"><span class="toc-number">1.5.</span> <span class="toc-text">istringstream</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ostringstream"><span class="toc-number">1.6.</span> <span class="toc-text">ostringstream</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Formatted-I-O"><span class="toc-number">1.7.</span> <span class="toc-text">Formatted I&#x2F;O</span></a></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(/img/index.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">SIYING ZHANG</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">File I/O and Debugging</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-09-24T09:05:50.000Z" title="Created 2020-09-24 11:05:50">2020-09-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2020-09-24T09:56:38.489Z" title="Updated 2020-09-24 11:56:38">2020-09-24</time></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h1 id="File-I-O"><a href="#File-I-O" class="headerlink" title="File I/O"></a>File I/O</h1><ol>
+<li>ifstream (input file stream)<ul>
+<li>Reading files</li>
+</ul>
+</li>
+<li>ofstream (output file stream)<ul>
+<li>Writing to files</li>
+</ul>
+</li>
+</ol>
+<h2 id="Common-Pattern"><a href="#Common-Pattern" class="headerlink" title="Common Pattern"></a>Common Pattern</h2><ul>
+<li>Open file<ul>
+<li>#include &quto; fstream &quto; </li>
+<li>#include “filelib.h” (standford library)<ul>
+<li>string promptUserForFile (stream, prompt): ask user for username and opens the file in stream</li>
+<li>stream.open(“file.txt”): if you already have the file name</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Close file<ul>
+<li>stream.close();</li>
+</ul>
+</li>
+</ul>
+<h2 id="Standford-Library"><a href="#Standford-Library" class="headerlink" title="Standford Library"></a>Standford Library</h2><p>#include “filelib.h”</p>
+<table>
+    <tr>
+        <td> createDirectory(name) </td>
+        <td> deleteFile(name) </td>
+        <td> getCurrentDirectory() </td>
+        <td> isDirectory(name)/ isFile(name) </td>
+    </tr>
+    <tr>
+        <td> promptUserForFile (ifstream&, prompt) </td>
+        <td> endEntireFile (ifstream&, lines) </td>
+        <td> renameFile (oldname, newname) </td>
+    </tr>
+</table>
+
+<h2 id="Creating-and-Closing"><a href="#Creating-and-Closing" class="headerlink" title="Creating and Closing"></a>Creating and Closing</h2><p>same for every file-reading program: create ifstream object and close ofstream object</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ifstream infile;</span><br><span class="line">promptUseForFile(infile, &quot;Filename?&quot;);          &#x2F;&#x2F;ask user for the file name</span><br><span class="line">&#x2F;&#x2F; infile.open(&quot;filename.txt&quot;);                 &#x2F;&#x2F;when you know the file to open</span><br><span class="line"></span><br><span class="line">char ch;</span><br><span class="line">while(infile.get(ch))&#123;                          &#x2F;&#x2F;reading char by char</span><br><span class="line">    &#x2F;&#x2F;do something with ch                      &#x2F;&#x2F; every iteration of while loop is new char</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">string line;</span><br><span class="line">while(getline(infile, line))&#123;                        </span><br><span class="line">&#x2F;&#x2F;do something with line                      </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">infile.close();</span><br></pre></td></tr></table></figure>
+
+<h2 id="Writing-Output"><a href="#Writing-Output" class="headerlink" title="Writing Output"></a>Writing Output</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ofstream outfile;</span><br><span class="line">promptUseForFile(outfile, &quot;Filename?&quot;);</span><br><span class="line"></span><br><span class="line">string word&#x3D;&quot;output&quot;;</span><br><span class="line">int s&#x3D;10;</span><br><span class="line">outfile &lt;&lt; word &lt;&lt;s;</span><br><span class="line"></span><br><span class="line">outfile.close();</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="istringstream"><a href="#istringstream" class="headerlink" title="istringstream"></a>istringstream</h2><p>#include &quto;sstream&quto;</p>
+<ul>
+<li>An istringstream: lets you tokenize a string  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;read a specific word tokens from a string</span><br><span class="line">istringstream input(&quot;Jenny Smith 8675309&quot;);</span><br><span class="line">string first, last;</span><br><span class="line">int phone;</span><br><span class="line">input&gt;&gt;first&gt;&gt;last;</span><br><span class="line">input&gt;&gt;phone;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;read all words tokens from a string</span><br><span class="line">istringstream input(&quot;to be or not to be&quot;);</span><br><span class="line">string word2;</span><br><span class="line">while(input &gt;&gt; word2)&#123;</span><br><span class="line">    cout&lt;&lt;word2&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="ostringstream"><a href="#ostringstream" class="headerlink" title="ostringstream"></a>ostringstream</h2><ul>
+<li>An ostringstream: lets you write output into a string buffer<ul>
+<li>Use the str method to extract the string that was built.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; produce a formatted string of output</span><br><span class="line">int age &#x3D; 42, iq &#x3D; 95;</span><br><span class="line">ostringstream output;</span><br><span class="line">output &lt;&lt; &quot;Zoidberg&#39;s age is &quot; &lt;&lt; age &lt;&lt; endl;</span><br><span class="line">output &lt;&lt; &quot; and his IQ is &quot; &lt;&lt; iq &lt;&lt; &quot;!&quot; &lt;&lt; endl;</span><br><span class="line">string result &#x3D; output.str();</span><br><span class="line">&#x2F;&#x2F; result &#x3D; &quot;Zoidberg&#39;s age is 42\nand his IQ is 95!\n&quot;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="Formatted-I-O"><a href="#Formatted-I-O" class="headerlink" title="Formatted I/O"></a>Formatted I/O</h2><p>#include &quto;iomanip&quto;<br>helps produced formatted output, a la printf</p>
+<table>
+    <tr>
+        <tb> setw(n)</tb>
+        <tb>right-aligns next token in a field n chars wide</tb>
+    </tr>
+        <tb> setfill(ch)</tb>
+        <tb>sets padding chars inserted by setw to the given char (default ' ')</tb>
+    </tr>
+    </tr>
+        <tb> setbase(b)</tb>
+        <tb>prints future numeric tokens in base-b</tb>
+    </tr>
+    </tr>
+        <tb> left, right</tb>
+        <tb>left- or right-aligns tokens if setw is used</tb>
+    </tr>
+    </tr>
+        <tb> setprecision(d)</tb>
+        <tb>prints future doubles with d digits after decimal</tb>
+    </tr>
+    </tr>
+        <tb> fixed</tb>
+        <tb>prints future doubles with a fixed number of digits</tb>
+    </tr>
+    </tr>
+        <tb>scientific</tb>
+        <tb>prints future doubles in scientific notation</tb>
+    </tr> 
+</table>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for (int i &#x3D; 2; i &lt;&#x3D; 2000; i *&#x3D; 10) &#123; &#x2F;&#x2F; 2 1.41</span><br><span class="line">cout &lt;&lt; left &lt;&lt; setw(4) &lt;&lt; i &#x2F;&#x2F; 20 4.47</span><br><span class="line">&lt;&lt; right &lt;&lt; setw(8) &lt;&lt; fixed &#x2F;&#x2F; 200 14.14</span><br><span class="line">&lt;&lt; setprecision(2) &lt;&lt; sqrt(i) &lt;&lt; endl; &#x2F;&#x2F; 2000 44.72</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Siying Zhag</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2020/09/24/File/">http://example.com/2020/09/24/File/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a></div><div class="post_share"><div class="social-share" data-image="/img/index.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2020/09/21/Collections/"><img class="next-cover" src="/img/index.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Collections</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2020/09/21/Collections/" title="Collections"><img class="cover" src="/img/index.jpg"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-21</div><div class="title">Collections</div></div></a></div><div><a href="/2020/09/18/Console-Programs/" title="Console_Programs"><img class="cover" src="/img/index.jpg"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-18</div><div class="title">Console_Programs</div></div></a></div><div><a href="/2020/09/16/My-first-blog/" title="Learning C++"><img class="cover" src="/img/index.jpg"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-16</div><div class="title">Learning C++</div></div></a></div></div></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By Siying Zhag</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
